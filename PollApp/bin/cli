@@ -1,0 +1,26 @@
+system("clear")
+poll = Poll.all.sample
+
+puts "Welcome to the #{poll.title.upcase} poll!"
+
+puts "Your name?"
+name = gets.chomp
+
+user = User.create!(user_name: name)
+
+questions = poll.questions
+
+questions.each_with_index do |question, idx|
+  puts "QUESTION #{idx+1}: #{question.question_text}\n\n"
+  responses = question.answer_choices
+  responses.each_with_index do |response, idx|
+    puts "#{idx+1}: #{response.choice}"
+  end
+  puts "Make a choice: "
+  user_input = gets.chomp.to_i - 1
+  user_choice = responses[user_input]
+  Response.create(user_id: user.id, answer_choice_id: user_choice.id)
+  system("clear")
+end
+
+puts "According to the poll you are most like #{Faker::Seinfeld.character}!!!!"
